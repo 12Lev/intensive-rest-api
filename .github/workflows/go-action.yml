@@ -29,6 +29,9 @@ jobs:
         run: swag init -g cmd/auth/auth-service.go
       - name: Tidy
         run: go mod tidy -compat=1.17
+      - name: Create zip directory
+        run: | 
+          mkdir -p zipdir
       - name: Get OS and arch info
         run: |
           PROJECT_NAME=intensive-rest-api
@@ -97,4 +100,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/12Lev/intensive-rest-api:1.0.0
+            ghcr.io/intensive-rest-api:1.0.0
