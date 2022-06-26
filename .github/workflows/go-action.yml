@@ -100,4 +100,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/intensive-rest-api:1.0.0
+            ghcr.io/12Lev/intensive-rest-api:1.0.0
