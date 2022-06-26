@@ -1,0 +1,114 @@
+definitions:
+  auth.AuthRequest:
+    properties:
+      email:
+        example: user@test.ru
+        type: string
+      password:
+        example: TestPwd123
+        type: string
+    type: object
+  auth.AuthResponse:
+    additionalProperties: true
+    type: object
+  auth.CreateUserRequest:
+    properties:
+      company:
+        example: ООО IT
+        type: string
+      email:
+        example: user@test.ru
+        type: string
+      password:
+        example: TestPwd123
+        type: string
+    type: object
+  auth.CreateUserResponse:
+    additionalProperties: true
+    type: object
+info:
+  contact: {}
+  description: Документация
+  title: Outdoor API
+  version: "2.0"
+paths:
+  /api/v1/add-user:
+    post:
+      consumes:
+      - application/json
+      description: Добавление пользователя.
+      operationId: routes-add-user
+      parameters:
+      - description: Запрос
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.CreateUserResponse'
+        "400":
+          description: 'Error: Bad Request'
+        "500":
+          description: ""
+      summary: Добавление пользователя.
+      tags:
+      - Пользователи
+  /api/v1/get-data:
+    get:
+      consumes:
+      - application/json
+      description: Получение данных.
+      operationId: routes-only-authorized-user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: 'Error: Unauthorized'
+        "500":
+          description: ""
+      security:
+      - ApiKeyAuth: []
+      summary: Получение данных, только для авторизованных пользователей.
+      tags:
+      - Данные
+  /api/v1/token:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация пользователя.
+      operationId: routes-auth-user-profile
+      parameters:
+      - description: Запрос
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.AuthResponse'
+        "400":
+          description: 'Error: Bad Request'
+        "500":
+          description: ""
+      summary: Авторизация пользователя.
+      tags:
+      - Авторизация
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: token
+    type: apiKey
+swagger: "2.0"

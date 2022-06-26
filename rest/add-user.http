@@ -1,0 +1,11 @@
+POST http://localhost:8000/api/v1/add-user
+Content-Type: application/json
+
+{
+  "email": "user@test.ru",
+  "company": "ООО IT",
+  "password": "TestPwd123"
+}
+
+###
+

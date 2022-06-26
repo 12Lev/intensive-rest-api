@@ -1,0 +1,172 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Документация",
+        "title": "Outdoor API",
+        "contact": {},
+        "version": "2.0"
+    },
+    "paths": {
+        "/api/v1/add-user": {
+            "post": {
+                "description": "Добавление пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Добавление пользователя.",
+                "operationId": "routes-add-user",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.CreateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.CreateUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad Request"
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/get-data": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение данных.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Данные"
+                ],
+                "summary": "Получение данных, только для авторизованных пользователей.",
+                "operationId": "routes-only-authorized-user",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Error: Unauthorized"
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/token": {
+            "post": {
+                "description": "Авторизация пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Авторизация пользователя.",
+                "operationId": "routes-auth-user-profile",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.AuthRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.AuthResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad Request"
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "auth.AuthRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@test.ru"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "TestPwd123"
+                }
+            }
+        },
+        "auth.AuthResponse": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "auth.CreateUserRequest": {
+            "type": "object",
+            "properties": {
+                "company": {
+                    "type": "string",
+                    "example": "ООО IT"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "user@test.ru"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "TestPwd123"
+                }
+            }
+        },
+        "auth.CreateUserResponse": {
+            "type": "object",
+            "additionalProperties": true
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "token",
+            "in": "header"
+        }
+    }
+}

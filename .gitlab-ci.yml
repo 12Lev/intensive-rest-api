@@ -1,0 +1,34 @@
+image: llvllell/cicd-go
+
+variables:
+  REPO_NAME: gitlab.com/Lev_BA/intensive-rest-api
+  DOCKER_DRIVER: overlay
+  CONTAINER_VERSION: 1.0.0
+  BUILDAH_FORMAT: docker
+  BUILDAH_ISOLATION: rootless
+
+before_script:
+  - go version
+  - cd ..
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+  - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+  - cd $GOPATH/src/$REPO_NAME
+
+stages:
+  - build
+
+api:
+  stage: build
+  script:
+    - mkdir -p dist
+    - go install github.com/swaggo/swag/cmd/swag@latest
+    - go mod download golang.org/x/sync
+    - CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -ldflags '-extldflags "-static"' -o dist/app cmd/auth/auth-service.go
+    - swag init -g cmd/auth/auth-service.go
+    - buildah login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - buildah bud -f Dockerfile -t "$CI_REGISTRY_IMAGE:$CONTAINER_VERSION"
+    - buildah push "$CI_REGISTRY_IMAGE:$CONTAINER_VERSION"
+  only:
+    - main
+  when: on_success

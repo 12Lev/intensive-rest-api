@@ -1,0 +1,10 @@
+POST http://localhost:8000/api/v1/token
+Content-Type: application/json
+
+{
+  "email": "user@test.ru",
+  "password": "TestPwd123"
+}
+
+###
+
